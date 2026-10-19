@@ -20,7 +20,6 @@ int main()
     set<string> codes3;
 
     string race;
-    ifstream fin("codes.txt");
 
     //Print out the Table's header
     cout << "Race" << setw(WIDTH/2) << "|" << setw(WIDTH) << "Vector" << setw(WIDTH) << "List" << setw(WIDTH) << "Set" << endl;
@@ -48,6 +47,8 @@ int main()
             string lines;
             if (j == 0) //Race 1: Reading
             {
+                //Read the file input
+                ifstream fin("codes.txt");
                 if (fin.is_open())
                 {
                     while (getline(fin, lines))
@@ -59,10 +60,8 @@ int main()
                 }
                 else cout << "File not found" << endl;
 
-                //Clear the read pointer list
-                fin.clear();
-                //Also set the read pointer's position back to the beginning
-                fin.seekg(0);
+                //Close the file input
+                fin.close();
             }
             else if (j == 1) //Race 2: Sorting
             {
@@ -72,8 +71,10 @@ int main()
             }
             else if (j == 2) //Race 3: Inserting
             {
+                //Define the middle value of the structures
                 int middle = 0;
                 string test_code = "TESTCODE";
+                //Inserting at the middle of the vector
                 if (i == 0)
                 {
                     middle = (codes.size()) / 2;
@@ -81,6 +82,7 @@ int main()
                     advance(it, middle);
                     codes.insert(it, test_code);
                 }
+                //Inserting at the middle of the list
                 else if (i == 1)
                 {
                     middle = (codes2.size()) / 2;
@@ -88,17 +90,15 @@ int main()
                     advance(it, middle);
                     codes2.insert(it, test_code);
                 }
-                else if (i == 2)
-                {
-                    middle = (codes3.size()) / 2;
-                    auto it = codes3.begin();
-                    advance(it, middle);
-                    codes3.insert(test_code);
-                }
+                //Since sets don't have options for inserting after or before positions
+                //and the fact that it automatically sorts stuff out, just use insert()
+                else if (i == 2) codes3.insert(test_code);
             }
             else if (j == 3) //Race 4: Deleting
             {
+                //Define the middle value of the structures
                 int middle = 0;
+                //Remove the middle value of the vector
                 if (i == 0)
                 {
                     middle = (codes.size()) / 2;
@@ -106,6 +106,7 @@ int main()
                     advance(it, middle);
                     codes.erase(it);
                 }
+                //Remove the middle value of the list
                 else if (i == 1)
                 {
                     middle = (codes2.size()) / 2;
@@ -113,6 +114,7 @@ int main()
                     advance(it, middle);
                     codes2.erase(it);
                 }
+                //Remove the middle value of the size
                 else if (i == 2)
                 {
                     middle = (codes3.size()) / 2;
@@ -122,13 +124,12 @@ int main()
                 }
             }
 
-
             //End timing
             auto end = high_resolution_clock::now();
 
             //Compile the duration & print it
             auto duration = duration_cast<milliseconds>(end - start);
-            cout << setw(WIDTH) << duration.count();
+            cout << setw(WIDTH) << duration.count() << " ms";
         }
         cout << endl;
     }
