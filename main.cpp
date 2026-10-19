@@ -3,68 +3,67 @@
 #include <fstream>
 #include <chrono>
 #include <vector>
+#include <list>
+#include <set>
 using namespace std;
 using namespace std::chrono;
+
+const int SIZE = 3, RACE_SIZE = 4;;
+
+string getDataName(int num);
 
 int main()
 {
     vector<string> codes;
+    list<string> codes2;
+    set<string> codes3;
+    int durations[RACE_SIZE];
     ifstream fin("codes.txt");
 
-    for (int i = 1; i <= 4; i++)
+    //From there, start the chrono loops.
+    //Race 1: Reading
+    cout << "Race 1: Reading" << endl;
+    for (int i = 0; i < SIZE; i++)
     {
-        //RACE 1: READING
-        string name;
-        //Use a switch statement to define the race names
-        switch (i)
-        {
-            case 1: name = "Reading"; break;
-            case 2: name = "Sorting"; break;
-            case 3: name = "Inserting"; break;
-            case 4: name = "Deleting"; break;
-        }
-        //Print the race names & numbers
-        cout << "Race " << i << ": " << name << endl;
-
-        //From there, start the chrono loops.
         //Start timing
         auto start = high_resolution_clock::now();
 
-        //Race 1: Reading
-        if (i == 1)
+        string lines;
+        while (getline(fin, lines))
         {
-            // Example loop to measure
-            string lines;
-            while (getline(fin, lines))
-                codes.push_back(lines);
-            fin.close();
+            switch (i)
+            {
+                case 0: codes.push_back(lines); break;
+                case 1: codes2.push_back(lines); break;
+                case 2: codes3.insert(lines); break;
+            }
         }
-        //Race 2: Sorting
-        else if (i == 2)
-            sort(codes.begin(), codes.end());
-        //Race 3: Inserting
-        else if (i == 3)
-        {
-            auto it = codes.begin();
-            advance(it, (int)(codes.size() / 2));
-            codes.insert(it, "TESTVALUE");
-        }
-        //Race 4: Deleting
-        else if (i == 4)
-        {
-
-        }
-
 
         //End timing
         auto end = high_resolution_clock::now();
 
         //Compile the duration & print it
         auto duration = duration_cast<milliseconds>(end - start);
-        cout << "Time taken: " << duration.count() << " milliseconds\n" << "--------------------" << endl;
+        cout << "Time taken (" << getDataName(i) << "): " << duration.count() << " milliseconds\n" << endl;
+
+        //Clear the read pointer list
+        fin.clear();
+        //Also set the read pointer's position back to the beginning
+        fin.seekg(0);
     }
 
     return 0;
+}
+
+string getDataName(int num)
+{
+    switch (num)
+    {
+        case 0: return "Vector"; break;
+        case 1: return "List"; break;
+        case 2: return "Set"; break;
+        default: return "N/A"; break;
+    }
 }
 
 /* syntax examples:
