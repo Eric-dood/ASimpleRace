@@ -6,18 +6,20 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <algorithm>
 using namespace std;
 using namespace std::chrono;
 
+//Set up the global constants
 const int SIZE = 3, WIDTH = 10;
-
-string getRaceName(int num);
 
 int main()
 {
     vector<string> codes;
     list<string> codes2;
     set<string> codes3;
+
+    string race;
     ifstream fin("codes.txt");
 
     //Print out the Table's header
@@ -28,8 +30,16 @@ int main()
     //From there, start the chrono loops.
     for (int j = 0; j < 4; j++)
     {
+        switch (j)
+        {
+            case 0: race = "Reading"; break;
+            case 1: race = "Sorting"; break;
+            case 2: race = "Inserting"; break;
+            case 3: race = "Deleting"; break;
+        }
+
         //Race 1: Reading
-        cout << getRaceName(j) << setw(WIDTH/2) << "|";
+        cout << race << setw(WIDTH/2) << "|";
         for (int i = 0; i < SIZE; i++)
         {
             //Start timing
@@ -38,15 +48,16 @@ int main()
             string lines;
             if (j == 0) //Race 1: Reading
             {
-                while (getline(fin, lines))
+                if (fin.is_open())
                 {
-                    switch (i)
+                    while (getline(fin, lines))
                     {
-                        case 0: codes.push_back(lines); break;
-                        case 1: codes2.push_back(lines); break;
-                        case 2: codes3.insert(lines); break;
+                        if (i == 0) codes.push_back(lines);
+                        else if (i == 1) codes2.push_back(lines);
+                        else if (i == 2) codes3.insert(lines);
                     }
                 }
+                else cout << "File not found" << endl;
 
                 //Clear the read pointer list
                 fin.clear();
@@ -55,37 +66,59 @@ int main()
             }
             else if (j == 1) //Race 2: Sorting
             {
-                switch (i)
-                {
-                    case 0: sort(codes.begin(), codes.end()); break;
-                    case 1: codes2.sort(); break;
-                    //Sets are already sorted, so that is already excluded
-                }
+                if (i == 0) sort(codes.begin(), codes.end());
+                else if (i == 1) codes2.sort();
+                //Sets are already sorted, so that is already excluded
             }
             else if (j == 2) //Race 3: Inserting
             {
                 int middle = 0;
                 string test_code = "TESTCODE";
-                switch (i)
+                if (i == 0)
                 {
-                    case 0:
-                        middle = (codes.size()) / 2;
-                        auto it = codes.begin();
-                        advance(it, middle);
-                        codes.insert(it, test_code);
-                        break;
-                    case 1:
-                        middle = codes2.size() / 2;
-                        auto it2 = codes2.begin();
-                        advance(it2, middle);
-                        codes2.insert(it2, test_code);
-                        break;
-                    case 2:
-                        middle = codes3.size() / 2;
-                        auto it3 = codes3.begin();
-                        advance(it3, middle);
-                        codes3.insert(it3, test_code);
-                        break;
+                    middle = (codes.size()) / 2;
+                    auto it = codes.begin();
+                    advance(it, middle);
+                    codes.insert(it, test_code);
+                }
+                else if (i == 1)
+                {
+                    middle = (codes2.size()) / 2;
+                    auto it = codes2.begin();
+                    advance(it, middle);
+                    codes2.insert(it, test_code);
+                }
+                else if (i == 2)
+                {
+                    middle = (codes3.size()) / 2;
+                    auto it = codes3.begin();
+                    advance(it, middle);
+                    codes3.insert(test_code);
+                }
+            }
+            else if (j == 3) //Race 4: Deleting
+            {
+                int middle = 0;
+                if (i == 0)
+                {
+                    middle = (codes.size()) / 2;
+                    auto it = codes.begin();
+                    advance(it, middle);
+                    codes.erase(it);
+                }
+                else if (i == 1)
+                {
+                    middle = (codes2.size()) / 2;
+                    auto it = codes2.begin();
+                    advance(it, middle);
+                    codes2.erase(it);
+                }
+                else if (i == 2)
+                {
+                    middle = (codes3.size()) / 2;
+                    auto it = codes3.begin();
+                    advance(it, middle);
+                    codes3.erase(it);
                 }
             }
 
@@ -99,26 +132,6 @@ int main()
         }
         cout << endl;
     }
-
-    //Print the table
+    
     return 0;
 }
-
-string getRaceName(int num)
-{
-    switch (num)
-    {
-        case 0: return "Reading"; break;
-        case 1: return "Sorting"; break;
-        case 2: return "Inserting"; break;
-        case 3: return "Deleting"; break;
-        default: return "N/A"; break;
-    }
-}
-
-/* syntax examples:
-auto start = high_resolution_clock::now()
-auto end = high_resolution_clock::now()
-auto duration = duration_cast<milliseconds>(end - start)
-duration.count() references elapsed milliseconds
-*/
