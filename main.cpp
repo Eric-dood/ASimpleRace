@@ -15,6 +15,7 @@ int main()
     {
         //RACE 1: READING
         string name;
+        //Use a switch statement to define the race names
         switch (i)
         {
             case 1: name = "Reading"; break;
@@ -22,7 +23,10 @@ int main()
             case 3: name = "Inserting"; break;
             case 4: name = "Deleting"; break;
         }
+        //Print the race names & numbers
         cout << "Race " << i << ": " << name << endl;
+
+        //From there, start the chrono loops.
         //Start timing
         auto start = high_resolution_clock::now();
 
@@ -35,6 +39,22 @@ int main()
                 codes.push_back(lines);
             fin.close();
         }
+        //Race 2: Sorting
+        else if (i == 2)
+            sort(codes.begin(), codes.end());
+        //Race 3: Inserting
+        else if (i == 3)
+        {
+            auto it = codes.begin();
+            advance(it, (int)(codes.size() / 2));
+            codes.insert(it, "TESTVALUE");
+        }
+        //Race 4: Deleting
+        else if (i == 4)
+        {
+
+        }
+
 
         //End timing
         auto end = high_resolution_clock::now();
