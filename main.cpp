@@ -3,13 +3,14 @@
 #include <fstream>
 #include <chrono>
 #include <vector>
-#include <list>
-#include <set>
 using namespace std;
 using namespace std::chrono;
 
 int main()
 {
+    vector<string> codes;
+    ifstream fin("codes.txt");
+
     for (int i = 1; i <= 4; i++)
     {
         //RACE 1: READING
@@ -21,30 +22,26 @@ int main()
             case 3: name = "Inserting"; break;
             case 4: name = "Deleting"; break;
         }
-        cout << "Race " << i << ": " << name << endl << "--------------------" << endl;
+        cout << "Race " << i << ": " << name << endl;
         //Start timing
         auto start = high_resolution_clock::now();
 
-        // Example loop to measure
-        list<string> codes;
-        ifstream fin("codes.txt");
-
-        int j = 0;
-        while (fin >> codes[j++]);
-        fin.close();
+        //Race 1: Reading
+        if (i == 1)
+        {
+            // Example loop to measure
+            string lines;
+            while (getline(fin, lines))
+                codes.push_back(lines);
+            fin.close();
+        }
 
         //End timing
         auto end = high_resolution_clock::now();
 
         //Compile the duration & print it
         auto duration = duration_cast<milliseconds>(end - start);
-        cout << "Time taken: " << duration.count() << " milliseconds\n";
-
-        //RACE 2: SORTING
-
-        //RACE 3: INSERTING
-
-        //RACE 4: DELETING
+        cout << "Time taken: " << duration.count() << " milliseconds\n" << "--------------------" << endl;
     }
 
     return 0;
