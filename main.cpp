@@ -129,7 +129,7 @@ int main()
 
             //Compile the duration & print it
             auto duration = duration_cast<microseconds>(end - start);
-            cout << setw(WIDTH) << duration.count() << " ms";
+            cout << setw(WIDTH) << duration.count() << " μs";
         }
         cout << endl;
     }
