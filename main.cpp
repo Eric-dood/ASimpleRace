@@ -38,7 +38,7 @@ int main()
         }
 
         //Race 1: Reading
-        cout << race << setw(WIDTH/2) << "|";
+        cout << setw(WIDTH/2) << race << right << setw(WIDTH/2) << "|" << right;
         for (int i = 0; i < SIZE; i++)
         {
             //Start timing
@@ -128,7 +128,7 @@ int main()
             auto end = high_resolution_clock::now();
 
             //Compile the duration & print it
-            auto duration = duration_cast<milliseconds>(end - start);
+            auto duration = duration_cast<microseconds>(end - start);
             cout << setw(WIDTH) << duration.count() << " ms";
         }
         cout << endl;
